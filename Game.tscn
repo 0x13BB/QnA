@@ -1,0 +1,160 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Game.gd" type="Script" id=1]
+[ext_resource path="res://number_of_question.gd" type="Script" id=2]
+[ext_resource path="res://Button4.gd" type="Script" id=4]
+[ext_resource path="res://Button2.gd" type="Script" id=5]
+[ext_resource path="res://Button3.gd" type="Script" id=6]
+[ext_resource path="res://Button1.gd" type="Script" id=7]
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Node
+
+const SQlite = preload(\"res://addons/godot-sqlite/bin/gdsqlite.gdns\")
+var db = SQlite.new()
+var db_path = \"res://QnA_data\"
+
+#db = SQlite.new()
+#db.path = db_path
+	
+#db.open_db()
+	
+#db.query(\"SELECT max(id) from questions\")
+#NumberOfQuestion.max_id = int(str(db.query_result).split(\":\")[1].split(\"}\")[0])
+#print(str(NumberOfQuestion.max_id))
+
+#func _ready():
+	
+	
+	
+	
+	
+func readQuestionFromDB(id):
+	
+	_ready()
+	
+	var array = [\"\"]
+	var db
+	var db_path = \"res://QnA_data\"
+	
+	db = SQlite.new()
+	db.path = db_path
+	db.open_db()
+	
+	db.query(\"SELECT question FROM questions WHERE id = \" + str(id))
+
+	array.append(db.query_result)
+	#db.close_db()
+	return array
+
+func readAnswerFromDB(id):
+	
+	_ready()
+	
+	var array = []
+	
+	#db.open_db()
+	var db
+	var db_path = \"res://QnA_data\"
+	
+	db = SQlite.new()
+	db.path = db_path
+	
+	db.query(\"SELECT answer FROM answers WHERE id_question =\" + str(id))
+
+	array.append_array(db.query_result_by_reference)
+	#db.close_db()
+	return array
+	
+	
+	
+	
+	
+	
+func text_updater():
+	get_node(\"Label\").text = str(readQuestionFromDB(NumberOfQuestion.id)).split(\":\")[1].split(\"}\")[0]
+	get_node(\"Button1\").text = str(readAnswerFromDB(NumberOfQuestion.id)[0]).split(\":\")[1].split(\"}\")[0]
+	get_node(\"Button2\").text = str(readAnswerFromDB(NumberOfQuestion.id)[1]).split(\":\")[1].split(\"}\")[0]
+	get_node(\"Button3\").text = str(readAnswerFromDB(NumberOfQuestion.id)[2]).split(\":\")[1].split(\"}\")[0]
+	get_node(\"Button4\").text = str(readAnswerFromDB(NumberOfQuestion.id)[3]).split(\":\")[1].split(\"}\")[0]
+	#get_node(\"Button4\").
+"
+
+[sub_resource type="CanvasItemMaterial" id=1]
+
+[sub_resource type="QuadMesh" id=2]
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Button
+
+class_name Button_extended
+
+
+"
+
+[node name="Game" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="db_operator" type="Node" parent="."]
+script = SubResource( 3 )
+
+[node name="number_of_question" type="Node" parent="."]
+script = ExtResource( 2 )
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+modulate = Color( 0.356863, 0.345098, 0.647059, 1 )
+material = SubResource( 1 )
+position = Vector2( 300, 300 )
+scale = Vector2( 300, 100 )
+mesh = SubResource( 2 )
+
+[node name="Button_extended" type="Button" parent="."]
+margin_right = 12.0
+margin_bottom = 20.0
+disabled = true
+script = SubResource( 4 )
+
+[node name="Button1" type="Button" parent="Button_extended"]
+margin_left = 100.0
+margin_top = 400.0
+margin_right = 200.0
+margin_bottom = 445.0
+script = ExtResource( 7 )
+
+[node name="Button2" type="Button" parent="Button_extended"]
+margin_left = 400.0
+margin_top = 400.0
+margin_right = 500.0
+margin_bottom = 445.0
+script = ExtResource( 5 )
+
+[node name="Button4" type="Button" parent="Button_extended"]
+margin_left = 100.0
+margin_top = 500.0
+margin_right = 200.0
+margin_bottom = 545.0
+script = ExtResource( 4 )
+
+[node name="Button3" type="Button" parent="Button_extended"]
+margin_left = 400.0
+margin_top = 500.0
+margin_right = 500.0
+margin_bottom = 545.0
+script = ExtResource( 6 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = 150.0
+margin_top = 250.0
+margin_right = 450.0
+margin_bottom = 350.0
+text = "test"
+align = 1
+autowrap = true
+clip_text = true
+
+[node name="Label2" type="Label" parent="."]
+margin_left = 283.0
+margin_top = 400.0
+margin_right = 323.0
+margin_bottom = 414.0
+text = "text"
